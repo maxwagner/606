@@ -2,7 +2,7 @@
 title: "Lab 0"
 author: "Max Wagner"
 date: "August 30, 2015"
-output: pdf_document
+output: html_document
 ---
 
 ***
@@ -10,7 +10,7 @@ output: pdf_document
 
     + The dimensions of the data set are **`r source("more/present.R"); dim(present)`**. The column names are **`r names(present)`**, and the years included are:
     
-```{r, echo=FALSE, fig.align='center'}
+```{r, echo=FALSE}
 present$year
 ```
 
@@ -24,7 +24,7 @@ present$year
 
     + The average boy-to-girl ratio in the present set is **`r round(mean(present$boys / present$girls),2)`** compared to **`r round(mean(arbuthnot$boys / arbuthnot$girls),2)`** in the arbuthnot set. The observation seems to still be valid.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, echo=FALSE}
 plot(present$year, present$boys / present$girls, type = "b", xlab = "Year", ylab = "Boys / Girls", main = "Boy-to-Girl Ratio by Year")
 ```
 
