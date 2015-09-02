@@ -1,0 +1,35 @@
+---
+title: "Lab 0"
+author: "Max Wagner"
+date: "August 30, 2015"
+output: pdf_document
+---
+
+***
+1.   What years are included in this data set? What are the dimensions of the data frame and what are the variable or column names?
+
+    + The dimensions of the data set are **`r source("more/present.R"); dim(present)`**. The column names are **`r names(present)`**, and the years included are:
+    
+```{r, echo=FALSE, fig.align='center'}
+present$year
+```
+
+***
+2.   How do these counts compare to Arbuthnot's? Are they on a similar scale?
+
+    + The count of years in present is **`r source("more/arbuthnot.R"); length(present$year)`** while the number of years in the arbuthnot set is **`r length(arbuthnot$year)`**, which makes the present set **`r round(length(present$year) / length(arbuthnot$year),2)`%** of the arbuthnot set's size. The column names are the same in both, **`r names(arbuthnot)`**. The dimesions of present are **`r dim(present)`** versus **`r dim(arbuthnot)`** for arbuthnot, which is caused by the difference in years included.
+
+***
+3. Make a plot that displays the boy-to-girl ratio for every year in the data set. What do you see? Does Arbuthnot's observation about boys being born in greater proportion than girls hold up in the U.S.? Include the plot in your response.
+
+    + The average boy-to-girl ratio in the present set is **`r round(mean(present$boys / present$girls),2)`** compared to **`r round(mean(arbuthnot$boys / arbuthnot$girls),2)`** in the arbuthnot set. The observation seems to still be valid.
+
+```{r, echo=FALSE, fig.align='center'}
+plot(present$year, present$boys / present$girls, type = "b", xlab = "Year", ylab = "Boys / Girls", main = "Boy-to-Girl Ratio by Year")
+```
+
+***
+4. In what year did we see the most total number of births in the U.S.? You can refer to the help files or the R reference card http://cran.r-project.org/doc/contrib/Short-refcard.pdf to find helpful commands.
+
+    + The highest number of births occured in **`r present[which.max(present$boys + present$girls),1]`** with a total of **`r format(max(present$boys + present$girls), big.mark = ",")`**. 
+    
