@@ -1,0 +1,86 @@
+---
+title: "Homework 01"
+author: "Max Wagner"
+date: "September 6, 2015"
+output: pdf_document
+---
+
+***
+1.8
+
+a. Each row is a single person.
+
+b. There are 1691 participants.
+
+c. sex: categorical, age: numerical/continuous, marital: categorical, grossIncome: categorical, smoke: categorical, amtWeekends: numerical/continuous, amtWeekdays: numerical/continuous
+
+
+1.10
+
+a. The population of interest are children from ages 5 to 15. The sample are 160 children ages 5 to 15.
+
+b. It's not enough children for the population size. If anything, it might show some correlation, not causation.
+
+
+1.28
+
+a. I'm not entirely sure what the other factors are that they adjusted for. Also, it might not be a random sample, as the people could have been from a specific health plan. There's a lot of issues with this one.
+
+b. The biggest issue I see with it is that the bullying or behavior needs to be seen by a teacher or parent. That alone makes it unreliable. The conclusion I can find from the study is that children who have trouble sleeping could be correlated to disruptive behavior. One doesn't have to cause the other.
+
+
+1.36
+
+a. Experiment, they are telling people to do, or not to do something.
+
+b. exercise vs non-exercise
+
+c. yes, age
+
+d. no
+
+e. I think with a large enough sample size, it could be used to establish a causal relationship. It could be applied to the population at large for the age groups they used (18 - 55).
+
+f. I would only be concerned that the study is asking people not to exercise, which could be damaging in the long term.
+
+
+1.48
+```{r}
+scores <- c(57, 66, 69, 71, 72, 73, 74, 77, 78, 78, 79, 79, 81, 81, 82, 83, 83, 88, 89, 94)
+boxplot(scores)
+```
+
+
+1.50
+
+a. normal, 2
+
+b. uniform, 3
+
+c. right skewed, 1
+
+
+1.56
+
+a. right skewed, median, IQR
+
+b. symmetrical, mean, SD
+
+c. right skewed, mean, SD
+
+d. symmetrical, median, IQR
+
+
+1.70
+
+a. Survival is not independent from a transplant, patients that recieved a transplant were more likely to survive.
+
+b. It suggests that more than 50% survive less than 500 days, with the majority of values falling below the 1500 day threshold. However, compared to the longevity of control patients where the majority of values fall below 100 days, it looks very effective.
+
+c. Roughly 6/7 of all control died, and roughly 2/3 of all treatment died.
+
+d.i. The claim is that the heart transplant increased lifespan.
+
+d.ii. 3, 7, 7, 3, 0, large
+
+d.iii. It is centered around 0, with few observations far away from it, meaning that it is not likely to have been caused by chance.
