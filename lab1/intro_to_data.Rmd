@@ -1,10 +1,11 @@
 ---
 title: "Introduction to data"
 output:
+  pdf_document: default
   html_document:
-    theme: cerulean
-    highlight: pygments
     css: ./lab.css
+    highlight: pygments
+    theme: cerulean
 ---
 
 Some define Statistics as the field that focuses on turning information into
@@ -35,7 +36,7 @@ work with a small subset.
 We begin by loading the data set of 20,000 observations into the R workspace. 
 After launching RStudio, enter the following command.
 
-```{r load-data, eval=FALSE}
+```{r load-data, eval=TRUE}
 source("more/cdc.R")
 ```
 
@@ -64,6 +65,32 @@ as their desired weight, `wtdesire`, `age` in years, and `gender`.
 
 1.  How many cases are there in this data set?  How many variables?  For each 
     variable, identify its data type (e.g. categorical, discrete).
+    
+```{r e1}
+dim(cdc)
+names(cdc)
+```
+There are 20,000 cases and 9 variables.
+
+The variables are:
+
+-genhealth: categorical
+
+-exerany: categorical
+
+-hlthplan: categorical
+
+-smoke100: categorical
+
+-height: continuous
+
+-weight: continuous
+
+-wtdesire: continuous
+
+-age: discrete
+
+-gender: categorical
 
 We can have a look at the first few entries (rows) of our data with the command
 
@@ -162,6 +189,17 @@ another important idea that we'll return to later.
     `gender` and `exerany`. How many males are in the sample? What proportion of
     the sample reports being in excellent health?
 
+```{r e2}
+summary(cdc$height)
+IQR(cdc$height)
+summary(cdc$age)
+IQR(cdc$age)
+library(plyr)
+count(cdc$gender)
+count(cdc$exerany)
+count(cdc$genhlth)
+```
+
 The `table` command can be used to tabulate any number of variables that you 
 provide.  For example, to examine which participants have smoked across each 
 gender, we could use the following.
@@ -174,7 +212,7 @@ Here, we see column labels of 0 and 1. Recall that 1 indicates a respondent has
 smoked at least 100 cigarettes. The rows refer to gender. To create a mosaic 
 plot of this table, we would enter the following command.
 
-```{r mosaic-smoke-gender, eval=FALSE}
+```{r mosaic-smoke-gender, eval=TRUE}
 mosaicplot(table(cdc$gender,cdc$smoke100))
 ```
 
@@ -182,6 +220,8 @@ We could have accomplished this in two steps by saving the table in one line and
 applying `mosaicplot` in the next (see the table/barplot example above).
 
 3.  What does the mosaic plot reveal about smoking habits and gender?
+
+It reveals that more males have smoked 100 times than females.
 
 ## Interlude: How R thinks about data
 
@@ -333,10 +373,14 @@ group is hard to say, but right now the mechanics of this are the important
 thing). In principle, you may use as many "and" and "or" clauses as you like 
 when forming a subset.
 
-3.  Create a new object called `under23_and_smoke` that contains all observations 
+4.  Create a new object called `under23_and_smoke` that contains all observations 
     of respondents under the age of 23 that have smoked 100 cigarettes in their 
     lifetime. Write the command you used to create the new object as the answer
     to this exercise.
+
+```{r e4}
+under23_and_smoke <- subset(cdc, age < 23 & smoke100 == 1)
+```
 
 ## Quantitative data
 
@@ -384,7 +428,7 @@ kilograms) to imperial (inches and pounds).
 The following two lines first make a new object called `bmi` and then creates 
 box plots of these values, defining groups by the variable `cdc$genhlth`.
 
-```{r boxplot-bmi, eval=FALSE}
+```{r boxplot-bmi, eval=TRUE}
 bmi <- (cdc$weight / cdc$height^2) * 703
 boxplot(bmi ~ cdc$genhlth)
 ```
@@ -396,10 +440,15 @@ multiply by 703. The result is 20,000 BMI values, one for each respondent. This
 is one reason why we like R: it lets us perform computations like this using 
 very simple expressions.
 
-4.  What does this box plot show? Pick another categorical variable from the 
+5.  What does this box plot show? Pick another categorical variable from the 
     data set and see how it relates to BMI. List the variable you chose, why you
     might think it would have a relationship to BMI,  and indicate what the 
     figure seems to suggest. 
+
+The former plot shows that as the gen health condition gets worse, bmi gets higher. The following plot of bmi based on gender shows that males tend to have a higher bmi than females.
+```{r e5}
+boxplot(bmi ~ cdc$gender)
+```
 
 Finally, let's make some histograms. We can look at the histogram for the age of
 our respondents with the command
@@ -436,26 +485,64 @@ will serve us well throughout this course.
 
 -   Make a scatterplot of weight versus desired weight. Describe the 
     relationship between these two variables.
+    
+    As the actual weight increases, the desired weight increases.
+    ```{r}
+    plot(cdc$weight, cdc$wtdesire)
+    ```
 
 -   Let's consider a new variable: the difference between desired weight 
     (`wtdesire`) and current weight (`weight`). Create this new variable by 
     subtracting the two columns in the data frame and assigning them to a new 
     object called `wdiff`.
+    ```{r}
+    wdiff <- cdc$wtdesire - cdc$weight
+    ```
 
 -   What type of data is `wdiff`? If an observation `wdiff` is 0, what does 
     this mean about the person's weight and desired weight. What if `wdiff` is 
     positive or negative?
-
+    
+    If 'wdiff' is 0, it means the weight and desired weight are the same. If it is positive, it means they want to gain weight, if it is negative, it means they want to lose weight.
+    ```{r}
+    typeof(wdiff)
+    ```
+    
 -   Describe the distribution of `wdiff` in terms of its center, shape, and 
     spread, including any plots you use. What does this tell us about how people 
     feel about their current weight?
-
+    
+    With the median at -10, and the mean at -14.59, and the graph depicting a right skew, it can be assumed that the vast majority of numbers fall below 0. A negative trend tells that people commonly want to lose weight, rather than gain it.
+    ```{r}
+    summary(wdiff)
+    hist(wdiff, breaks = 50, col = "blue", xlim = c(-200, 100))
+    ```
+    
 -   Using numerical summaries and a side-by-side box plot, determine if men tend
     to view their weight differently than women.
-
+    
+    DescribeBy from psych provides a bit too much information for this case, but looking at the widff mean and sd of each gender can tell quickly that females want to lose more weight than males do. The male mean / sd being -10.71 / 23.49, and the female being -18.15 / 24.00. This is compounded by the overall lower weight of females. A proportion is more appropiate in this case. The percentage of desired weight loss being *`r (-10.71 / 189.32) * 100`* for males, and *`r (-18.15 / 151.67) * 100`* for females.
+    ```{r}
+    library(psych)
+    cdc_wdiff <- cbind(cdc, wdiff)
+    wdiff_gender <- cdc_wdiff[,c(6:7, 9:10)]
+    describeBy(wdiff_gender, group = wdiff_gender$gender)
+    boxplot(wdiff ~ cdc$gender)
+    ```
+    
 -   Now it's time to get creative. Find the mean and standard deviation of 
     `weight` and determine what proportion of the weights are within one 
     standard deviation of the mean.
+    
+    The mean and sd of all weights are 169.68 / 40.08, which makes the range `r 169.68 - 40.08` to `r 169.68 + 40.08`. 14152 cases fall in this range, which is roughly 70.76% of all cases.
+    ```{r}
+    total_cases <- nrow(cdc)
+    weight_mean <- mean(cdc$weight)
+    weight_sd <- sd(cdc$weight)
+    new_cases <- nrow(subset(cdc, weight >= (weight_mean - weight_sd) & weight <= (weight_mean + weight_sd)))
+    new_cases
+    new_cases / total_cases
+    ```    
 
 <div id="license">
 This is a product of OpenIntro that is released under a 
