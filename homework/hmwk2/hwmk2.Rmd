@@ -1,0 +1,8 @@
+---
+title: "Homework 02 - 2.6, 2.8, 2.20, 2.30, 2.38, 2.44"
+author: "Max Wagner"
+date: "September 12, 2015"
+output: pdf_document
+---
+
+***
