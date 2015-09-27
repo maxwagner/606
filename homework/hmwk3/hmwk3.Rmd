@@ -4,7 +4,6 @@ author: "Max Wagner"
 date: "September 26, 2015"
 output: html_document
 ---
-
 ***
 
 3.2
@@ -71,5 +70,31 @@ range_997 <- c((61.52 - 4.58 * 3), (61.52 + 4.58 * 3)); range_997
 b. The distribution is unimodal and symmetrical, with the curve looking normal. The normal probability plot follows a relatively straight line, with 2 outliers, neither of which are extreme.
 
 3.22
+
+a.
+```{r}
+x <- ((1 - .02) ^ 9) * .02; x
+```
+
+b.
+```{r}
+x <- (1 - .02) ^ 100; x
+```
+
+c.
+```{r}
+expected <- (1 / .02); expected
+sd <- sqrt((1 - .02) / (.02 ^ 2)); sd
+```
+
+d.
+```{r}
+expected <- (1 / .05); expected
+sd <- sqrt((1 - .05) / (.05 ^ 2)); sd
+```
+
+e. The mean and sd of a success are lower when the probability is higher.
+
+3.38
 
 a.
