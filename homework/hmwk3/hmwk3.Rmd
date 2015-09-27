@@ -1,0 +1,75 @@
+---
+title: Homework 02 - 3.2, 3.4, 3.18, 3.22, 3.38, 3.42
+author: "Max Wagner"
+date: "September 26, 2015"
+output: html_document
+---
+
+***
+
+3.2
+
+a. 
+```{r}
+1 - pnorm(-1.13)
+```
+![](http://puu.sh/kqnwv/71dbba7614.png)
+
+b. 
+```{r}
+pnorm(.18)
+```
+![](http://puu.sh/kqnxS/3f0cada5a8.png)
+
+c. 
+```{r}
+1 - pnorm(8)
+```
+![](http://puu.sh/kqnq4/4ffe22f585.png)
+
+d. 
+```{r}
+(1 - pnorm(.5)) + (pnorm(-.5))
+```
+![](http://puu.sh/kqntP/1bf46417f7.png)
+
+3.4
+
+a. N(µ = 4313, σ = 583), N(µ = 5261, σ = 807)
+
+b. The z-scores tell me that Leo is 1.09 sd's from the mean, and Mary is .31 sd's from the mean.
+```{r}
+leo_z <- (4948 - 4313) / 583; leo_z
+mary_z <- (5513 - 5261) / 807; mary_z
+```
+
+c. Mary ranked better than Leo. Both are positive, which means they are above the mean time, but Mary's z-score is lower than Leo's, meaning she is closer to the mean.
+
+d. The percentage is the (1 - pnorm).
+```{r}
+leo_per <- pnorm(leo_z); 1 - leo_per
+```
+
+e. The percentage is the (1 - pnorm).
+```{r}
+mary_per <- pnorm(mary_z); 1 - mary_per
+```
+
+f. Z-scores would still be able to be calculated, but d and e would not be possible without a normal plot.
+
+3.18
+
+a. 68% of score fall within 1σ, 96% within 2σ, and 100% within 3σ. 
+```{r}
+range_68 <- c((61.52 - 4.58), (61.52 + 4.58)); range_68
+per_68 <- (21 - 4) / 25; per_68
+range_95 <- c((61.52 - 4.58 * 2), (61.52 + 4.58 * 2)); range_95
+per_95 <- 24 / 25; per_95
+range_997 <- c((61.52 - 4.58 * 3), (61.52 + 4.58 * 3)); range_997 
+```
+
+b. The distribution is unimodal and symmetrical, with the curve looking normal. The normal probability plot follows a relatively straight line, with 2 outliers, neither of which are extreme.
+
+3.22
+
+a.
