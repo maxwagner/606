@@ -1,8 +1,8 @@
 ---
-title: Homework 02 - 3.2, 3.4, 3.18, 3.22, 3.38, 3.42
+title: "Homework 02 - 3.2, 3.4, 3.18, 3.22, 3.38, 3.42"
 author: "Max Wagner"
 date: "September 26, 2015"
-output: html_document
+output: pdf_document
 ---
 ***
 
@@ -34,7 +34,7 @@ d.
 
 3.4
 
-a. N(µ = 4313, σ = 583), N(µ = 5261, σ = 807)
+a. N($\mu$ = 4313, $\sigma$ = 583), N($\mu$ = 5261, $\sigma$ = 807)
 
 b. The z-scores tell me that Leo is 1.09 sd's from the mean, and Mary is .31 sd's from the mean.
 ```{r}
@@ -58,7 +58,7 @@ f. Z-scores would still be able to be calculated, but d and e would not be possi
 
 3.18
 
-a. 68% of score fall within 1σ, 96% within 2σ, and 100% within 3σ. 
+a. 68% of score fall within 1$\sigma$, 96% within 2$\sigma$, and 100% within 3$\sigma$. 
 ```{r}
 range_68 <- c((61.52 - 4.58), (61.52 + 4.58)); range_68
 per_68 <- (21 - 4) / 25; per_68
