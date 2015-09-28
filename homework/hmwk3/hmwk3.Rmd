@@ -97,4 +97,39 @@ e. The mean and sd of a success are lower when the probability is higher.
 
 3.38
 
+a. 
+```{r}
+p1 <- factorial(3) / (factorial(2) * factorial(3 - 2))
+p2 <- (.51 ^ 2) * (.49 ^ 1)
+answer <- p1 * p2; answer
+```
+
+b. In any of these cases, the probability will remain the same, as they all include 2 successes and 1 failure. If the parents stopped having children after the 2nd boy, it would be different.
+```{r}
+matrix(c("G", "B", "B", "B", "G", "B", "B", "B", "G"), byrow = T, nrow = 3)
+```
+
+Using the addition rule for disjoint outcomes works out the same answer.
+```{r}
+.49 * .51 * .51 * 3
+```
+
+c. Part a. only requires one formula, and one probability, whereas part b. require entering multiple probabilites multiple times.
+
+3.42
+
 a.
+```{r}
+p1 <- (factorial(10 - 1)) / (factorial(3 - 1) * factorial(10 - 3))
+p2 <- (.15 ^ 3) * (.85 ^ 7)
+answer <- p1 * p2; answer
+```
+
+b.
+```{r}
+p1 <- factorial(10) / (factorial(3) * factorial(10 - 3))
+p2 <- (.15 ^ 3) * (.85 ^ 7)
+answer <- p1 * p2; answer
+```
+
+c. The difference between a. and b., is that a. is calculated with a good serve on the 10th trial, whereas b. is calculated without a preset 10th trial.
