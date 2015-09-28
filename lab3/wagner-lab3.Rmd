@@ -1,10 +1,11 @@
 ---
 title: "The normal distribution"
 output:
+  pdf_document: default
   html_document:
-    theme: cerulean
-    highlight: pygments
     css: ./lab.css
+    highlight: pygments
+    theme: cerulean
 ---
 
 In this lab we'll investigate the probability distribution that is most central
@@ -263,25 +264,35 @@ theoretical probabilities will be.
     generate the plots in R to check.
 
     **a.** The histogram for female biiliac (pelvic) diameter (`bii.di`) belongs
-    to normal probability plot letter ____.
+    to normal probability plot letter **B**.
 
     **b.** The histogram for female elbow diameter (`elb.di`) belongs to normal 
-    probability plot letter ____.
+    probability plot letter **C**.
 
     **c.** The histogram for general age (`age`) belongs to normal probability 
-    plot letter ____.
+    plot letter **D**.
 
     **d.** The histogram for female chest depth (`che.de`) belongs to normal 
-    probability plot letter ____.
+    probability plot letter **A**.
 
 -   Note that normal probability plots C and D have a slight stepwise pattern.  
     Why do you think this is the case?
+    
+    Typically, a stepwise pattern indicates that the data is either rounded or discrete. Meaning it is likely categorical. I assume this is the case for elbow diameter. The age plot isn't as strongly patterned as the elbow plot, which I think makes sense being that the data is likely less rounded than the elbow data.
 
 -   As you can see, normal probability plots can be used both to assess 
     normality and visualize skewness.  Make a normal probability plot for female 
     knee diameter (`kne.di`).  Based on this normal probability plot, is this 
     variable left skewed, symmetric, or right skewed?  Use a histogram to confirm 
     your findings.
+    
+    A slope that increases from left to right indicates a right skew. The histogram confirms this.
+    
+    ```{R}
+    qqnorm(fdims$kne.di)
+    qqline(fdims$kne.di)
+    hist(fdims$kne.di)
+    ```
 
 
 ![histQQmatch](more/histQQmatch.png)
