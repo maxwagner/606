@@ -1,11 +1,11 @@
 ---
-title: 'Foundations for statistical inference - Sampling distributions'
+title: "Foundations for statistical inference - Sampling distributions"
 output:
+  pdf_document: default
   html_document:
     css: ./lab.css
     highlight: pygments
     theme: cerulean
-  pdf_document: default
 ---
 
 In this lab, we investigate the ways in which the statistics from a random 
@@ -22,7 +22,7 @@ in Ames between 2006 and 2010.  This collection represents our population of
 interest.  In this lab we would like to learn about these home sales by taking 
 smaller samples from the full population.  Let's load the data.
 
-```{r load-data, eval=FALSE}
+```{r load-data, eval=TRUE}
 load("more/ames.RData")
 ```
 
@@ -33,7 +33,7 @@ two of the variables: the above ground living area of the house in square feet
 throughout the lab, create two variables with short names that represent these 
 two variables.  
 
-```{r assign, eval=FALSE}
+```{r assign, eval=TRUE}
 area <- ames$Gr.Liv.Area
 price <- ames$SalePrice
 ```
@@ -41,12 +41,18 @@ price <- ames$SalePrice
 Let's look at the distribution of area in our population of home sales by 
 calculating a few summary statistics and making a histogram.
 
-```{r area, eval=FALSE}
+```{r area, eval=TRUE}
 summary(area)
 hist(area)
 ```
 
 1.  Describe this population distribution.
+
+    There are outliers in the data, which means the median will be a better indicator than the mean. It is also right skewed. The boxplot shows a large amount of outliers on the upper end.
+  
+    ```{r}
+    boxplot(area)
+    ```
 
 ## The unknown sampling distribution
 
@@ -58,7 +64,7 @@ the population and use that to understand the properties of the population.
 If we were interested in estimating the mean living area in Ames based on a 
 sample, we can use the following command to survey the population.
 
-```{r samp1, eval=FALSE}
+```{r samp1, eval=TRUE}
 samp1 <- sample(area, 50)
 ```
 
@@ -70,6 +76,13 @@ home sales.
 
 2.  Describe the distribution of this sample. How does it compare to the 
     distribution of the population?
+    
+    The distribution looks very similar to the population as a whole. However, with only 50 samples, the distribution could look quite a bit differently. I could set a seed, but I think it's useful to see the variation.
+    
+    ```{r}
+    hist(samp1)
+    boxplot(samp1)
+    ```
 
 If we're interested in estimating the average living area in homes in Ames 
 using the sample, our best single guess is the sample mean.
@@ -88,6 +101,14 @@ population.
     mean of `samp2` compare with the mean of `samp1`?  Suppose we took two 
     more samples, one of size 100 and one of size 1000. Which would you think 
     would provide a more accurate estimate of the population mean?
+    
+    ```{r}
+    samp2 <- sample(area, 50)
+    hist(samp2)
+    boxplot(samp2)
+    ```
+    
+    Like I said above, a sample of 50 will vary sample to sample. The mean of sample 1 is `r mean(samp1)`, while sample 2's mean is `r mean(samp2)`. These numbers could vary greatly depending on the sample. A larger sample size, of 1000, would provide a more accurate estimate.
 
 Not surprisingly, every time we take another random sample, we get a different 
 sample mean.  It's useful to get a sense of just how much variability we 
@@ -98,10 +119,10 @@ can build up the sampling distribution for the sample mean by repeating the
 above steps many times. Here we will generate 5000 samples and compute the 
 sample mean of each.
 
-```{r loop, eval=FALSE}
+```{r loop, eval=TRUE}
 sample_means50 <- rep(NA, 5000)
 
-for(i in 1:5000){
+for (i in 1:5000) {
    samp <- sample(area, 50)
    sample_means50[i] <- mean(samp)
    }
@@ -124,6 +145,21 @@ the mean of each sample, and store each result in a vector called
     distribution, and be sure to specifically note its center.  Would you 
     expect the distribution to change if we instead collected 50,000 sample 
     means?
+    
+    There are `r length(sample_means50)` elements in the distribution with an average mean of `r mean(sample_means50)`. I would assume a sample of 50,000 would not change the average mean too much. But looking below a 50,000 sample can be seen:
+    
+    ```{r}
+    sample_means50_2 <- rep(NA, 50000)
+
+    for (i in 1:50000) {
+       samp <- sample(area, 50)
+       sample_means50_2[i] <- mean(samp)
+    }
+
+    mean(sample_means50_2)
+    ```
+    
+    The average might be slightly more accurate, but will always center right around 1500.
 
 ## Interlude: The `for` loop
 
@@ -200,6 +236,18 @@ initialized at the outset.
     `sample_means_small` into the console and press enter).  How many elements 
     are there in this object called `sample_means_small`? What does each 
     element represent?
+    
+    There will be 5000 elements, where the 1st 100 will be means, and the remaining will be set to NA.
+    
+    ```{r}
+    sample_means_small <- rep(NA, 5000)
+
+    for (i in 1:100) {
+       samp <- sample(area, 50)
+       sample_means_small[i] <- mean(samp)
+       print(i)
+    }
+    ```
 
 ## Sample size and the sampling distribution
 
@@ -220,7 +268,7 @@ To get a sense of the effect that sample size has on our distribution, let's
 build up two more sampling distributions: one based on a sample size of 10 and 
 another based on a sample size of 100.
 
-```{r samp-10-100, eval=FALSE}
+```{r samp-10-100, eval=TRUE}
 sample_means10 <- rep(NA, 5000)
 sample_means100 <- rep(NA, 5000)
 
@@ -244,7 +292,7 @@ get replaced with the new one.
 To see the effect that different sample sizes have on the sampling 
 distribution, plot the three distributions on top of one another.
 
-```{r plot-samps, eval=FALSE, tidy = FALSE}
+```{r plot-samps, eval=TRUE, tidy = FALSE}
 par(mfrow = c(3, 1))
 
 xlimits <- range(sample_means10)
@@ -264,6 +312,8 @@ plotted with the same limits on the x-axis.
 
 6.  When the sample size is larger, what happens to the center?  What about the spread?
 
+    The center of the samples are all relatively the same, but with larger sample sizes, the spread decreases. 
+
 * * *
 ## On your own
 
@@ -272,6 +322,14 @@ Ames.  Now you'll try to estimate the mean home price.
 
 -   Take a random sample of size 50 from `price`. Using this sample, what is 
     your best point estimate of the population mean?
+    
+    The sample will likely be skewed and have outliers. So the median is probably the best way to find a middle. But a mean can be taken too.
+    
+    ```{r}
+    samp1 <- sample(price, 50)
+    hist(samp1)
+    summary(samp1)
+    ```
 
 -   Since you have access to the population, simulate the sampling 
     distribution for $\bar{x}_{price}$ by taking 5000 samples from the 
@@ -280,6 +338,19 @@ Ames.  Now you'll try to estimate the mean home price.
     shape of this sampling distribution. Based on this sampling distribution, 
     what would you guess the mean home price of the population to be? Finally, 
     calculate and report the population mean.
+    
+    ```{r}
+    sample_means50 <- rep(NA, 5000)
+
+    for (i in 1:5000) {
+       samp <- sample(price, 50)
+       sample_means50[i] <- mean(samp)
+    }
+    
+    hist(sample_means50)
+    ```
+    
+    The histogram of prices looks like a normal distribution with no skew. The sample mean tends to be near `r options(scipen=999); round(mean(sample_means50),2)`, with the population mean being `r round(mean(price),2)`. 
 
 -   Change your sample size from 50 to 150, then compute the sampling 
     distribution using the same method as above, and store these means in a 
@@ -287,10 +358,26 @@ Ames.  Now you'll try to estimate the mean home price.
     distribution, and compare it to the sampling distribution for a sample 
     size of 50.  Based on this sampling distribution, what would you guess to 
     be the mean sale price of homes in Ames?
+    
+    ```{r}
+    sample_means150 <- rep(NA, 5000)
 
--   Of the sampling distributions from 2 and 3, which has a smaller spread?  If
+    for (i in 1:5000) {
+       samp <- sample(price, 150)
+       sample_means150[i] <- mean(samp)
+    }
+    
+    hist(sample_means150)
+    ```
+    
+    The histogram of prices looks like a normal distribution with no skew, very similar to the 50 sample distribution. The sample mean tends to be near `r round(mean(sample_means150),2)`, which should be closer to the population mean of `r round(mean(price),2)` more often than the 50 sample distribution.
+
+-   Of the sampling distributions from 2 and 3, which has a smaller spread? If
     we're concerned with making estimates that are more often close to the 
     true value, would we prefer a distribution with a large or small spread?
+    
+    The 50 sample IQR is `r IQR(sample_means50)`, and the 150 sample IQR is `r IQR(sample_means150)`. The 150 sample IQR is `r IQR(sample_means150) / IQR(sample_means50)` times smaller than the 50 sample IQR. To get estimates that are closer to the true value, a small spread would be preferred.
+    
 
 <div id="license">
 This is a product of OpenIntro that is released under a [Creative Commons 
