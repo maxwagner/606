@@ -43,8 +43,16 @@ samp <- sample(population, 60)
 "typical" size within your sample? Also state precisely what you interpreted 
 "typical" to mean.
 
+    With a sample that is skewed or has outliers, the median is a more accurate middle than the mean. In the case of a single 50 element sample, the median is more likely to give a better center. The median in this case is `r median(samp)`.
+
+    ```{r}
+    hist(samp)
+    ```
+
 2.  Would you expect another student's distribution to be identical to yours? 
 Would you expect it to be similar? Why or why not?
+
+    The chances of another student's distribution being identical to mine are nearly zero. However, the median should be fairly similar, but not necessarily exactly the same.
 
 ## Confidence intervals
 
@@ -52,7 +60,7 @@ One of the most common ways to describe the typical or central value of a
 distribution is to use the mean. In this case we can calculate the mean of the 
 sample using,
 
-```{r sample-mean, eval=FALSE}
+```{r sample-mean, eval=TRUE}
 sample_mean <- mean(samp)
 ```
 
