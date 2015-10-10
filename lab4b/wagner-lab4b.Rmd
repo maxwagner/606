@@ -1,11 +1,11 @@
 ---
-title: 'Foundations for statistical inference - Confidence intervals'
+title: "Foundations for statistical inference - Confidence intervals"
 output:
+  pdf_document: default
   html_document:
     css: ./lab.css
     highlight: pygments
     theme: cerulean
-  pdf_document: default
 ---
 
 ## Sampling from Ames, Iowa
@@ -43,7 +43,7 @@ samp <- sample(population, 60)
 "typical" size within your sample? Also state precisely what you interpreted 
 "typical" to mean.
 
-    With a sample that is skewed or has outliers, the median is a more accurate middle than the mean. In the case of a single 50 element sample, the median is more likely to give a better center. The median in this case is `r median(samp)`.
+    With a sample that is skewed or has outliers, the median is a more accurate middle than the mean. In the case of a single 60 element sample, the median is more likely to give a better center. The median in this case is `r median(samp)`.
 
     ```{r}
     hist(samp)
@@ -76,7 +76,7 @@ We can calculate a 95% confidence interval for a sample mean by adding and
 subtracting 1.96 standard errors to the point estimate (See Section 4.2.3 if 
 you are unfamiliar with this formula).
 
-```{r ci, eval=FALSE}
+```{r ci, eval=TRUE}
 se <- sd(samp) / sqrt(60)
 lower <- sample_mean - 1.96 * se
 upper <- sample_mean + 1.96 * se
@@ -92,21 +92,28 @@ There are a few conditions that must be met for this interval to be valid.
 distributed and have standard error $s / \sqrt{n}$. What conditions must be 
 met for this to be true?
 
+    It must be a simple random sample where the individual samples are independent. Like above, also normally distributed with a sample size large enough for the population.
+
 ## Confidence levels
 
 4.  What does "95% confidence" mean? If you're not sure, see Section 4.2.2.
+
+    What a 95% confidence interval means is that within the given range of values, there is a 95% chance it contains the population mean. The larger the sample, the smaller the interval, and vice-versa.
 
 In this case we have the luxury of knowing the true population mean since we 
 have data on the entire population. This value can be calculated using the 
 following command:
 
-```{r pop-mean, eval=FALSE}
+```{r pop-mean, eval=TRUE}
 mean(population)
+c(lower, upper)
 ```
 
 5.  Does your confidence interval capture the true average size of houses in 
 Ames? If you are working on this lab in a classroom, does your neighbor's 
-interval capture this value? 
+interval capture this value?
+
+    The interval does contain the population mean.
 
 6.  Each student in your class should have gotten a slightly different 
 confidence interval. What proportion of those intervals would you expect to 
@@ -114,6 +121,8 @@ capture the true population mean? Why? If you are working in this lab in a
 classroom, collect data on the intervals created by other students in the 
 class and calculate the proportion of intervals that capture the true 
 population mean.
+
+    Depending on the amount of people in the class, it should eventually equal out to 95% of the classes' intervals containing the population mean.
 
 Using R, we're going to recreate many samples to learn more about how sample 
 means and confidence intervals vary from one sample to another. *Loops* come 
@@ -131,7 +140,7 @@ But before we do all of this, we need to first create empty vectors where we
 can save the means and standard deviations that will be calculated from each 
 sample. And while we're at it, let's also store the desired sample size as `n`.
 
-```{r set-up, eval=FALSE}
+```{r set-up, eval=TRUE}
 samp_mean <- rep(NA, 50)
 samp_sd <- rep(NA, 50)
 n <- 60
@@ -139,8 +148,8 @@ n <- 60
 
 Now we're ready for the loop where we calculate the means and standard deviations of 50 random samples.
 
-```{r loop, eval=FALSE, tidy = FALSE}
-for(i in 1:50){
+```{r loop, eval=TRUE, tidy = FALSE}
+for (i in 1:50){
   samp <- sample(population, n) # obtain a sample of size n = 60 from the population
   samp_mean[i] <- mean(samp)    # save sample mean in ith element of samp_mean
   samp_sd[i] <- sd(samp)        # save sample sd in ith element of samp_sd
@@ -149,7 +158,7 @@ for(i in 1:50){
 
 Lastly, we construct the confidence intervals.
 
-```{r ci50, eval=FALSE}
+```{r ci50, eval=TRUE}
 lower_vector <- samp_mean - 1.96 * samp_sd / sqrt(n) 
 upper_vector <- samp_mean + 1.96 * samp_sd / sqrt(n)
 ```
@@ -169,13 +178,17 @@ c(lower_vector[1], upper_vector[1])
     plot all intervals. What proportion of your confidence intervals include 
     the true population mean? Is this proportion exactly equal to the 
     confidence level? If not, explain why.
-
-    ```{r plot-ci, eval=FALSE}
+    
+    In this case I am explaining, there were 3 cases where the confidence level did not contain the population mean. This number could change on each load. 3/50 = `r 1- (3/50)`. It's unlikey that the proportion will be exactly the same each time. It is only a probability, not a definite.
+    
+    ```{r plot-ci, eval=TRUE}
     plot_ci(lower_vector, upper_vector, mean(population))
     ```
 
 -   Pick a confidence level of your choosing, provided it is not 95%. What is 
     the appropriate critical value?
+    
+        At 99% CI, the critical value is `r qnorm(1 - (1 - .99) / 2)`.
 
 -   Calculate 50 confidence intervals at the confidence level you chose in the 
     previous question. You do not need to obtain new samples, simply calculate 
@@ -184,6 +197,14 @@ c(lower_vector[1], upper_vector[1])
     calculate the proportion of intervals that include the true population 
     mean. How does this percentage compare to the confidence level selected for
     the intervals?
+    
+    In the few I looked at, all the sample contained the population mean. This is extremely likely, as the percentage is 99%. The value I found is higher than the 99% chances, but is very close.
+    
+    ```{r}
+    lower_vector <- samp_mean - qnorm(1 - (1 - .99) / 2) * samp_sd / sqrt(n) 
+    upper_vector <- samp_mean + qnorm(1 - (1 - .99) / 2) * samp_sd / sqrt(n)
+    plot_ci(lower_vector, upper_vector, mean(population))
+    ```
 
 <div id="license">
 This is a product of OpenIntro that is released under a [Creative Commons 
