@@ -1,19 +1,113 @@
 ---
-title: 'Chapter 5: 5.6, 5.14, 5.20, 5.32, 5.48'
+title: 'Chapter 6: 6.6, 6.12, 6.20, 6.28, 6.44, 6.48'
 author: "Max Wagner"
 date: "October 31, 2015"
 output:
+  pdf_document: default
   html_document:
-    theme: flatly
     highlight: espresso
+    theme: flatly
 ---
-
 ***
-Query the science top stories API, and get the results section only into an data frame. Then do a little head view of just the title column.
-```{r message=FALSE}
-library(jsonlite)
-nyt_j <- fromJSON("http://api.nytimes.com/svc/topstories/v1/science.json?api-key=17068d0e51d2b2dbcbc67410171d1146:10:73350860")
-nyt_j <- data.frame(nyt_j$results)
 
-head(nyt_j$title)
+###6.6
+####a. 
+False, it should be about the population, not the sample.
+
+####b.
+True, a fixed version of (a).
+
+####c.
+Weird wording(false), but the point is 95% of the samples should include the population proportion.
+
+####d.
+False, the margin of error should be lower/narrower with a lower CI.
+
+###6.12
+####a.
+48% represents a sample stat.
+
+####b.
+```{r}
+n <- 1259
+legal <- .48
+se <- sqrt((legal * (1 - legal)) / n)
+z <- qnorm(.975)
+me <- z * se
 ```
+The CI is `r legal` +/- `r me`.
+
+####c.
+Being that the percentages are 52% and 48% (almost even), it is likely close to normal.
+
+####d.
+Technically the interval for legality can reach up to `r legal + me`. It is a stretch but not technically wrong.
+
+###6.20
+```{r}
+me <- .02
+z <- qnorm(.975)
+se <- me / z
+n <- (legal * (1 - legal)) / se ^ 2;n
+```
+
+###6.28
+```{r}
+ca <- .08
+ca_n <- 11545
+or <- .088
+or_n <- 4691
+diff <- or - ca
+se <- sqrt(((ca * (1 - ca)) / ca_n) + ((or * (1 - or)) / or_n))
+z <- qnorm(.975)
+me <- z * se
+```
+The CI is `r diff` +/- `r me`. This interval contains 0, so they are statistically different.
+
+###6.44
+####a.
+Null: Deer do not prefer one habitat over another, and foraging is proportional to land distribution, Alt: Deer do prefer certain habitats, and foraging is not proportional to land distribution.
+
+####b.
+One way is to use a chi-square test.
+
+####c.
+The conditions state the sample should be independent, and expecteded counts should be 5 or greater.
+
+####d.
+```{r}
+expected <- c(.048*426, .147*426, .396*426, (1 - .396 - .147 - .048)*426)
+actual <- c(4, 16, 67, 345)
+df <- length(actual) - 1
+chi <- sum(((actual - expected) ^ 2) / expected)
+p <- pchisq(chi, df, lower.tail = FALSE)
+```
+
+P is almost 0, which means we reject the null, and say that deer do prefer to forage in someplaces over others.
+
+###6.48
+####a. 
+yay more chi square
+
+####b.
+Null: depression and coffee consumption are unrelated, Alt: depression and coffee consumption are related.
+
+####c.
+do: `r 2607 / 50739`, don't: `r 48132 / 50739`
+
+####d.
+```{r}
+exp <- 2607 * (6617/50739);exp
+contrib <- (373 - exp) ^ 2 / exp;contrib
+```
+
+####e.
+```{r}
+pchisq(20.93, df = 4, lower.tail = FALSE)
+```
+
+####f.
+The p value is less than .05, so we reject the null, and accept that there is a relationship between coffee and depression.
+
+####g.
+I agree with the author for a few reasons. The first being that a p value of .03 is convincing, but not conclusive. The second being that there could a whole lot of other variables going on these women's lives.

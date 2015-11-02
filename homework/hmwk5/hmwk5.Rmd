@@ -94,6 +94,7 @@ g.
 
 It is very likely to include 0, is there is indeed no difference between reading and writing scores.
 
+***
 5.32
 
 Null: difference = 0, Alt: difference != 0
@@ -113,6 +114,7 @@ p <- pt(t, df); 1 - p
 
 The p value is less than 0.05, so we reject the null hypothesis, and say that the means fuel milage differs.
 
+***
 5.48
 
 a.
