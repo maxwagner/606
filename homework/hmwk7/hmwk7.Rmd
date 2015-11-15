@@ -1,0 +1,76 @@
+---
+title: 'Chapter 7: 7.24, 7.26, 7.30, 7.40'
+author: "Max Wagner"
+date: "November 13, 2015"
+output:
+  pdf_document: default
+  html_document:
+    highlight: espresso
+    theme: flatly
+---
+***
+
+###7.24
+####a. 
+Increasing calories also increases carbs, so the relationship is positive.
+
+####b.
+Calories is the explanatory, and carbs is response.
+
+####c.
+A regression line could tell us how many carbs are likely to appear given a certain amount of calories.
+
+####d.
+The most important aspect is that it needs to appear linear. This data set is possibly linear, but is certainly not going to be close to the best fit line. They appear to be independent, and the residuals are nearly 0 at lower levels of calories. As calories increase, as do the difference in residuals. The distribution is fairly normal, but not perfect.
+
+
+###7.26
+####a.
+```{r}
+m <- ((9.41 / 10.37) * 0.67)
+b <- (m * (0 - 107.2)) + 171.14
+```
+y = `r m`x + `r b`
+
+####b.
+For every 1cm of girth, the height increases by the slope, `r m`cm. At 0cm girth, the height is assumed to be `r b`cm.
+
+####c.
+With an R^2 of `r .67 ^ 2`, it means `r (.67 ^ 2) * 100`% of the height variation is explained by the regression model.
+
+####d.
+The height would be `r b + (m * 100)`cm.
+
+####e.
+The residual in this case would be `r 160 - (b + (m * 100))`. The negative residual indicates we overestimated the height with the model.
+
+####f.
+The model was developed from adult proportions, so it may be wrong when looking at children. This model is not appropiate for this prediction.
+
+
+###7.30
+####a.
+y = 4.034x - 0.357
+
+####b.
+A negative y-intercept implies that at x = 0, y is negative. In this case, y is heart weight, which cannot be negative.
+
+####c.
+For every 1kg increase in body weight, heart weight increases by 4.034g.
+
+####d.
+R^2 of 64.66% implies that the regression model accounts for 64.66% of the varience in heart weight.
+
+####e.
+The correlation coefficient is `r sqrt(.6466)`.
+
+
+###7.40
+####a.
+The slope is `r m <- (3.9983 - 4.010) / -0.0883; m`.
+
+####b.
+With p-values of 0 and 0, and a positive t value, it leads us to believe there is a strong positive relationship between evaluation and beauty.
+
+####c.
+The scatterplot provides a minimal case for the data being linear, the residuals are nearly normal in the Q-Q plot and seem to have constant variability. The observations are assumed to be independent.
