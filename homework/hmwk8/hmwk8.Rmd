@@ -1,0 +1,83 @@
+---
+title: 'Chapter 8: 8.2, 8.4, 8.8, 8.16, 8.18'
+author: "Max Wagner"
+date: "November 26, 2015"
+output:
+  pdf_document: default
+  html_document:
+    highlight: espresso
+    theme: flatly
+---
+***
+
+###8.2
+####a.
+baby weight = 120.07 - 1.93 * parity
+
+####b.
+The weight of non first borns is estimated to be 1.93 ounces lower than babies that are first born. First born: 120.07 - 1.93 * 0 = 120.07 ounces, non first born: 120.07 - 1.93 * 1 = 118.14 ounces.
+
+####c.
+The p value for parity is 0.1052, which is larger than the ideal threshold of 0.05. The slope parameter is non gaurenteed to be different with 95% confidence, so we cannot conclude parity affects birth weight.
+
+###8.4
+####a.
+absences = 18.93 -9.11 x eth + 3.10 x sex + 2.15 x lrn
+
+####b.
+
+eth: being not aboriginal reduces days absent by an estimated 9.11 days
+
+sex: being male increases days absent by an estimated 3.10 days
+
+lrn: being a slow learner increases days absent by an estimated 2.15 days
+
+####c.
+
+actual: 2 days
+
+predicted: 18.93 -9.11 x 0 + 3.10 x 1 + 2.15 x 1 = 24.18 days
+
+residual: -22.18
+
+####d.
+$R^{2}$ = 1 - (240.57/264.17) = 0.08933641
+
+$R^{2} _{adj}$ = (1 - (240.57/264.17)) / ((146 - 1) / (146 - 3 - 1)) = 0.07009704
+
+###8.8
+Dropping learner status results in a higher $R^{2}$ value, which is preferred compared to the lower $R^{2}$'s of the other options.
+
+###8.16
+####a. 
+It appears that lower temperatures, near 53 - 63 degrees cause O-rings to break more frequently. There is also an isolated incendent at 75 degrees.
+
+####b.
+The key concept to take away from this section of the table is that for each degree of temperature, the number of damaged O-rings decreases by 0.2162. This also means that it should be roughly 54 degrees to bring the value to 0 O-ring damage.
+
+It should also be noted that the p-value for temperature(slope) is 0.
+
+####c.
+log($\frac{P_{i}}{1 - P_{i}}$) = 11.6630 - 0.2162 * temperature
+
+####d.
+As I said in part b, there is certainly reason to be concerned when the temperature is at, or below, roughly 54 degrees.
+
+###8.18
+####a.
+
+51: log(P/(1-P)) = 11.6630 - 0.2162 * 51 = 0.65403
+
+53: log(P/(1-P)) = 11.6630 - 0.2162 * 53 = 0.55092
+
+55: log(P/(1-P)) = 11.6630 - 0.2162 * 55 = 0.44325
+
+####b.
+```{r}
+temps <- c(51,53,55,57,59,61,63,65,67,69,71)
+probs <- c(.65403,.55092,.44325,.341,.251,.179,.124,.084,.056,.037,.024)
+plot(x = temps, y = probs, type = "o")
+```
+
+####c.
+The four main assumptions are that residuals are normal, variablity of the residuals are nearly normal, the residuals are independent, and each variable is linearly related to the outcome. In this case, I believe the conditions are met. However, we are assuming that each is independent.

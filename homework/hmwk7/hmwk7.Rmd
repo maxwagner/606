@@ -1,7 +1,7 @@
 ---
-title: 'Chapter 7: 7.24, 7.26, 7.30, 7.40'
+title: 'Chapter 8: 8.2, 8.4, 8.8, 8.16, 8.18'
 author: "Max Wagner"
-date: "November 13, 2015"
+date: "November 26, 2015"
 output:
   pdf_document: default
   html_document:
