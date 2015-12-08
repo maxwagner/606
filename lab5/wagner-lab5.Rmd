@@ -1,11 +1,11 @@
 ---
 title: "Inference for numerical data"
 output:
-  pdf_document: default
   html_document:
     css: ./lab.css
     highlight: pygments
     theme: cerulean
+  pdf_document: default
 ---
 
 ## North Carolina births

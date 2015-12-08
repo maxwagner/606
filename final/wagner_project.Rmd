@@ -1,0 +1,227 @@
+---
+title: "Thanksgiving by Region"
+author: "Max Wagner"
+date: "December 7th, 2015"
+output: html_document
+---
+```{r include=FALSE, cache=FALSE}
+library(knitr)
+## set global chunk options
+opts_chunk$set(fig.path='figure/manual-', cache.path='cache/manual-', fig.align='center', fig.show='hold', par=TRUE)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)})
+```
+
+```{r include=FALSE}
+# load data, rename things
+library(dplyr)
+library(plyr)
+library(ggplot2)
+library(psych)
+library(tidyr)
+library(MRCV)
+
+#loads the inference function for later on
+load("more/inferencefxn.RData")
+
+file <- "data/thanksgiving-2015-poll-data.csv"
+turkey <- read.csv(file, header = TRUE)
+turkey$US.Region <- revalue(turkey$US.Region, c("East North Central" = "EN Cntrl", "East South Central" = "ES Cntrl", "Middle Atlantic" = "Mid Atl", "Mountain" = "Mtn", "New England" = "New Eng", "Pacific" = "Pacif", "South Atlantic" = "S Atl", "West North Central" = "WN Cntrl", "West South Central" = "WS Cntrl"))
+```
+
+
+### Part 1 - Introduction:
+
+How do different regions in the United States celebrate Thanksgiving? This past Thanksgiving a survey was given by FiveThirtyEightLife with 64 questions on everything from the respondents main dish to how much they shop on Black Friday. The focus of this project will be mainly on whether the respondends celebrated, what their main dish was, and which side dishes they accompanied it with. 
+
+### Part 2 - Data:
+
+As said above, the data was collected by FiveThirtyEightLife via a SurveyMonkey on November 17th, 2015. The survey collected a total of 1,058 responses with varying amounts of response thoroughness. This project will be using a subset of the original data set found on FiveThirtyEightLife's [Github page](https://github.com/fivethirtyeight/data/tree/master/thanksgiving-2015). In particular, the project will use the explanatory variable on the respondents' region, and study a range of response variables:
+
+* Do you celebrate Thanksgiving?
+* What is typically the main dish at your Thanksgiving dinner?
+* Which of these side dishes are typically served at your Thanksgiving dinner?
+
+A sample size of 1,058 is large enough to generalize to the public as a whole and to each individual region. A potential problem with the collection method is that it was collected only by visitors of that specific website. Causality can also not be determined due to it being a purely observational study.
+
+### Part 3 - Exploratory data analysis:
+
+#### Count of Regions
+
+First let's look at the spread of regions and number of responses from each of them. Out of 1,058 responses, 999 listed a region and 59 did not. As you can see below, the highest percentages of responses come from the South Atlantic and Middle Atlantic. The South Atlantic had over four times the responses as the Mountain, New England, and East South Central.
+
+The following tables show first a raw count of responses per region, and secondly the frequency as a percentage. The plot below the two tables is a representation of the first raw count table.
+```{r echo=FALSE}
+# remove ""s, print a region count/percent and graph
+turkey[turkey == ""] <- NA
+kable(data.frame(summary(turkey$US.Region)))
+kable(data.frame(prop.table(table(turkey$US.Region)) * 100))
+region.plot <- qplot(turkey$US.Region, xlab = "Regions", ylab = "Count", main = "Region Count")
+region.plot + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+***
+
+#### Celebration Percentage by Region
+
+The first response answered was whether or not the respondent celebrated Thanksgiving. The following tables and mosaic plot look at the counts of yes/no answers based on region, and the percentages. The Mountain and Pacific regions tend to be slightly lower than the others.
+```{r echo=FALSE,warning=FALSE}
+cele.region <- table(turkey$US.Region, turkey$Do.you.celebrate.Thanksgiving.)
+kable(cele.region)
+kable(prop.table(cele.region, 1) * 100)
+mosaicplot(cele.region, main = "", color = TRUE)
+```
+
+***
+
+#### Main Dish by Region
+
+After determining the respondents who did not celebrate Thanksgiving, the rows containing those values were removed as all other questions are blank. This leaves a remaining sample of 931 respondents. The obvious and overwhelming favorite is Turkey, with the Other category nearby.The differences between regions for the main dish is relatively small.
+```{r echo=FALSE}
+turkey <- subset(turkey, Do.you.celebrate.Thanksgiving. == "Yes" & !is.na(US.Region))
+main.dish <- subset(turkey, select = c(65, 3), !is.na(What.is.typically.the.main.dish.at.your.Thanksgiving.dinner.))
+main.dish$What.is.typically.the.main.dish.at.your.Thanksgiving.dinner. <- revalue(main.dish$What.is.typically.the.main.dish.at.your.Thanksgiving.dinner., c("Other (please specify)" = "Other"))
+
+main.dish.counts <- as.data.frame(summary(main.dish$What.is.typically.the.main.dish.at.your.Thanksgiving.dinner.))
+colnames(main.dish.counts) <- "Count"
+kable(main.dish.counts)
+
+main.dish.counts <- as.data.frame(100 * prop.table(summary(main.dish$What.is.typically.the.main.dish.at.your.Thanksgiving.dinner.)))
+colnames(main.dish.counts) <- "Freq"
+kable(main.dish.counts)
+
+main.dish <- table(main.dish)
+kable(main.dish)
+kable(100 * round(prop.table(main.dish, 1), 4))
+```
+
+***
+
+#### Which Side Dishes are Preferred
+
+The first table shows the overall most eaten side dishes throughout the country. The three most common dishes were mashed potatoes, rolls/bisquets, and green beans. A notable omission from this list is stuffing. The question was not asked on the survey.
+```{r echo=FALSE}
+sides <- read.csv(file, header = TRUE, stringsAsFactors = FALSE)
+sides <- subset(sides, Do.you.celebrate.Thanksgiving. == "Yes" & !is.na(US.Region))
+sides <- subset(sides, select = c(12:24))
+sides[sides != ""] <- 1
+sides[sides == ""] <- 0
+colnames(sides) <- c("sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam")
+sides <- as.data.frame(sapply(sides, as.numeric))
+
+sides.means <- aggregate(sides, by = list(turkey$US.Region), FUN = mean)
+sides.means[2:14] <- round(sides.means[2:14], 4) * 100
+colnames(sides.means) <- c("region", "sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam")
+
+sides <- as.data.frame(colMeans(sides) * 100)
+sides <- as.data.frame(rbind(c("sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam"), round(sides[,1], 2)))
+sides <- sides[2,]
+sides <- cbind("All", sides)
+colnames(sides) <- c("region", "sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam")
+rownames(sides) <- NULL
+kable(sides)
+```
+
+The next table looks at each of the side dishes and their average prevalence in each regions' meals.
+```{r echo=FALSE}
+kable(sides.means)
+```
+
+
+When we take the difference of each region and the overall average, we get the following table that shows which roughly equates to the residuals. The last row shows the mean difference for each side dish, and the last column shows the mean difference for each region. This allows a slightly different view on each side dish and region. 
+```{r echo=FALSE}
+diffs <- read.csv("data/diffs.csv")
+diffs.1 <- subset(diffs, select = c(1:8))
+diffs.2 <- subset(diffs, select = c(1, 9:15))
+kable(diffs.1)
+kable(diffs.2)
+```
+
+For instance it is simple to tell which region is the least or most likely to include squash in their meal. A slightly more interesting use of the table is understanding which region tends to have the most unique meal compared to other regions. This is possible by looking at the means column. East South Central tends to have the most unique meal which is likely due to their large residuals for fruit, beans, yams, and pasta. South Atlantic has the least unique as their high amount of pasta eaten is balanced by their relatively lower amounts of most other sides.
+
+### Part 4 - Inference:
+
+#### Celebration
+The first step is figuring out whether the difference in celebration between regions is by chance, or if it statistically meaningful. Below is a quick table to see an overview of the responses, and another to view by region. Each is shown as a percentage.
+```{r echo=FALSE}
+#reload turkey to get rid of any changes
+turkey <- read.csv(file, header = TRUE)
+turkey$US.Region <- revalue(turkey$US.Region, c("East North Central" = "EN Cntrl", "East South Central" = "ES Cntrl", "Middle Atlantic" = "Mid Atl", "Mountain" = "Mtn", "New England" = "New Eng", "Pacific" = "Pacif", "South Atlantic" = "S Atl", "West North Central" = "WN Cntrl", "West South Central" = "WS Cntrl"))
+
+cele.region <- round(prop.table(table(turkey$US.Region, turkey$Do.you.celebrate.Thanksgiving.), margin = 1) * 100, 2)
+cele.total <- round(prop.table(summary(turkey$Do.you.celebrate.Thanksgiving.)) * 100,2)
+kable(as.data.frame(cele.total))
+kable(cele.region)
+```
+
+```{r echo=FALSE}
+p <- 0.081
+n <- 68
+np <- n*p
+np2 <- n * (1 - p)
+```
+The inference function from a lab earlier this year tests the standard error and the interval, but first we need a check for the requirements. All observations seems to be independent, but the success failure check indicates that np = `r np` and n(1 - p) = `r np2`. Only one of the two needed passes the check so we will use a simulation for inference.
+
+```{r echo=FALSE}
+inference(turkey$Do.you.celebrate.Thanksgiving., est = "proportion", type = "ci", method = "simulation", success = "No")
+```
+
+#### Side Dishes
+
+Instead of looking at all the regions individually, we can look at individual side dishes and if they are statistically different in each region compared to the overall average. For the sake of the length we will look at a limited number of side dishes. For each ANOVA test the hypothesis will be the same:
+
+\(H_0: \mu_1 = \mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7 = \mu_8 = \mu_9 \) where 1-9 represent each region
+
+\(H_a:\) one or more means are different
+```{r echo=FALSE}
+# kind of useless things, might be added in later
+sides <- read.csv(file, header = TRUE, stringsAsFactors = FALSE)
+turkey <- subset(turkey, Do.you.celebrate.Thanksgiving. == "Yes" & !is.na(US.Region))
+sides <- subset(sides, Do.you.celebrate.Thanksgiving. == "Yes" & !is.na(US.Region))
+sides <- subset(sides, select = c(12:24))
+sides[sides != ""] <- 1
+sides[sides == ""] <- 0
+sides <- as.data.frame(sapply(sides, as.numeric))
+colnames(sides) <- c("sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam")
+sides.means <- round(colMeans(sides) * 100, 2)
+
+sides.means.ne <- cbind(turkey$US.Region, sides)
+sides.anova <- sides.means.ne
+sides.means.ne <- subset(sides.means.ne, select = c(-1), sides.means.ne$`turkey$US.Region` == "New Eng")
+sides.means.ne <- round(colMeans(sides.means.ne) * 100, 2)
+
+sides.diff <- sides.means.ne - sides.means
+
+sides.comparison <- as.data.frame(cbind(sides.means, sides.means.ne, sides.diff))
+
+colnames(sides.comparison) <- c("All", "New England", "Difference")
+```
+
+```{r echo=FALSE}
+sides.anova$`turkey$US.Region` <- revalue(sides.anova$`turkey$US.Region`, c("EN Cntrl" = 1, "ES Cntrl" = 2, "Mid Atl" = 3, "Mtn" = 4, "New Eng" = 5, "Pacif" = 6, "S Atl" = 7, "WN Cntrl" = 8, "WS Cntrl" = 9))
+colnames(sides.anova) <- c("region", "sprouts", "carrts", "cauli", "corn", "crnbrd", "fruit", "beans", "pasta", "potato", "rolls", "squash", "veges", "yam")
+
+#sprouts
+summary(aov(sides.anova$sprouts ~ sides.anova$region))
+```
+
+Taking a look at the statistics for sprouts, we can see that the p-value is leass than 0.05, so the null is rejected, which means that at least one region has as statistically different of sprouts eaten than the average.
+
+The same can be done for all other side dishes. In the instance of the table for cauliflower below, the p-value is also below 0.05 which means we reject the null hypothesis and at least one region has a different amount of cauliflower eaten than the others. An important thing to note is that the p-value is much closer to 0.05 than the sprouts example.
+```{r echo=FALSE}
+summary(aov(sides.anova$cauli ~ sides.anova$region))
+```
+
+The table below is for pasta which had the largest difference in the section 3 table. Again we reject the null hypothesis. Interestingly the p-value is smaller than the value from the sprouts example. The other side dishes follow a similar pattern as the three example tables.
+```{r echo=FALSE}
+summary(aov(sides.anova$pasta ~ sides.anova$region))
+```
+
+### Part 5 - Conclusion: 
+
+The brief look at Thanksgiving meals throughout the United States concludes a few important things. One is that each region certainly eats different things for Thanksgiving. The main dish of Turkey remains constant throughout the country, but individual side dishes differ greatly from region to region. The variation between regions was significantly more defined than I had expected going into the project. Being from New England myself, awareness of how others spend their holidays was an interesting topic. In the future, it would be beneficial to look at more of the personal aspects of Thanksgiving like how many family members came, how much they spent on Black Friday, or if they watched the Macy's Parade.
+
+### References:
+
+* https://github.com/fivethirtyeight/data/tree/master/thanksgiving-2015

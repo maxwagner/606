@@ -304,8 +304,13 @@ us12 &lt;-<span class="st"> </span><span class="kw">subset</span>(atheism, natio
 ## Standard error = 0.0069 
 ## 95 % Confidence interval = ( 0.0364 , 0.0634 )</code></pre>
 <p>The CI’s do not overlap, so there is evidence that the atheism rate has changed.</p></li>
-<li><p>If in fact there has been no change in the atheism index in the countries listed in Table 4, in how many of those countries would you expect to detect a change (at a significance level of 0.05) simply by chance?<br /><em>Hint:</em> Look in the textbook index under Type 1 error.</p></li>
-<li><p>Suppose you’re hired by the local government to estimate the proportion of residents that attend a religious service on a weekly basis. According to the guidelines, the estimate must have a margin of error no greater than 1% with 95% confidence. You have no idea what to expect for <span class="math">\(p\)</span>. How many people would you have to sample to ensure that you are within the guidelines?<br /><em>Hint:</em> Refer to your plot of the relationship between <span class="math">\(p\)</span> and margin of error. Do not use the data set to answer this question.</p></li>
+<li><p>If in fact there has been no change in the atheism index in the countries listed in Table 4, in how many of those countries would you expect to detect a change (at a significance level of 0.05) simply by chance?<br /><em>Hint:</em> Look in the textbook index under Type 1 error.</p>
+<p>95% of the time the CI would be correct, but 5% of the time a change would be expected.</p></li>
+<li><p>Suppose you’re hired by the local government to estimate the proportion of residents that attend a religious service on a weekly basis. According to the guidelines, the estimate must have a margin of error no greater than 1% with 95% confidence. You have no idea what to expect for <span class="math">\(p\)</span>. How many people would you have to sample to ensure that you are within the guidelines?<br /><em>Hint:</em> Refer to your plot of the relationship between <span class="math">\(p\)</span> and margin of error. Do not use the data set to answer this question.</p>
+<pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span>.<span class="dv">5</span>
+me &lt;-<span class="st"> </span>.<span class="dv">01</span>
+(p -<span class="st"> </span>p ^<span class="st"> </span><span class="dv">2</span>) /<span class="st"> </span>(me /<span class="st"> </span><span class="fl">1.96</span>) ^<span class="st"> </span><span class="dv">2</span></code></pre>
+<pre><code>## [1] 9604</code></pre></li>
 </ul>
 <div id="license">
 This is a product of OpenIntro that is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0">Creative Commons Attribution-ShareAlike 3.0 Unported</a>. This lab was written for OpenIntro by Andrew Bray and Mine Çetinkaya-Rundel.

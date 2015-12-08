@@ -1,11 +1,11 @@
 ---
 title: "Inference for categorical data"
 output:
-  pdf_document: default
   html_document:
     css: ./lab.css
     highlight: pygments
     theme: cerulean
+  pdf_document: default
 ---
 
 In August of 2012, news outlets ranging from the [Washington
