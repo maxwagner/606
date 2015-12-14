@@ -1,0 +1,72 @@
+---
+title: 'Bayesian: 2.1, 5.1, 5.2, '
+author: "Max Wagner"
+date: "Decemeber 10, 2015"
+output:
+  pdf_document: default
+  html_document:
+    highlight: espresso
+    theme: flatly
+---
+***
+
+###2.1
+
+A. Model A has no bias, as it is an even 1/4 chance for each side. Which gives a P(x) = 1/4 for each side.
+
+B. Model B gives a higher chance as the number increases. P(x) = `r c(1:4) / 10`
+
+C. Model C gives a higher chance as the number decreases. P(x) = `r 12 / (25 * c(1:4))`
+
+###5.1
+
+Prob for first test, and then the second...
+```{r}
+present <- 0.001
+absent <- 1 - present
+present_pos <- 0.99
+absent_pos <- 0.05
+
+top <- present_pos * present
+bottom <- present_pos * present + (absent_pos * (1 - present))
+first_test <- top / bottom;first_test
+
+top <- (1 - present_pos) * first_test
+bottom <- (1 - present_pos) * first_test + ((1 - absent_pos) * (1 - first_test))
+second_test <- top / bottom;second_test
+```
+
+###5.2
+####A.
+
+The table from part can be seen below:
+```{r}
+library(knitr)
+sad <- c(0.99 * 0.001 * 100000, (1.0 - 0.99) * 0.001 * 100000, 0.001 * 100000)
+happy <- c(0.05 * (1.0 - 0.001) * 100000, (1.0 - 0.05) * (1.0 - 0.001) * 100000, (1.0 - 0.001) * 100000)
+tot <- sad + happy
+sht <- cbind(sad, happy, tot)
+rownames(sht) <- c("+", "-", "tot")
+kable(sht)
+```
+
+####B.
+
+From the table, it would appear that every 99 / 5,094 would have the disease. The actual number is the same as the percentage from above, 99 / 5094 = `r 99 / 5094`.
+
+####C.
+
+The tree is represented as a table.
+```{r}
+left <- c(10000, 10000 * 0.99, 9900 * (1.0 - 0.99))
+right <- c(9990000, 9990000 * 0.05, 499500 * (1.0 - 0.05))
+lr <- cbind(left, right)
+kable(lr)
+```
+
+####D.
+
+The proportion works out to be the same.
+```{r}
+99 / (99 + 474525)
+```
