@@ -150,7 +150,7 @@ plot(ab3)
 #### data4: 
 
 Independence is assumed. The top left graph is not random, so the check fails due to variance not being homogeneous, and not being linear.
-```{r}
+```{r warning=FALSE}
 par(mfrow = c(2, 2))
 ab4 <- lm(data$y4 ~ data$x4)
 plot(ab4)
