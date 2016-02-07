@@ -2,7 +2,7 @@
 title: "Thanksgiving by Region"
 author: "Max Wagner"
 date: "December 7th, 2015"
-output: html_document
+output: pdf_document
 ---
 ```{r include=FALSE, cache=FALSE}
 library(knitr)
